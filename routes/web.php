@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Feature1Controller;
+use App\Http\Controllers\Feature2Controller;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -22,6 +24,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::controller(Feature1Controller::class)
+        ->prefix('feature1')
+        ->group(static function (): void {
+            Route::get('/', 'index')->name('feature1.index');
+            Route::post('/calculate', 'calculate')->name('feature1.calculate');
+        });
+
+    Route::controller(Feature2Controller::class)
+        ->prefix('feature2')
+        ->group(static function (): void {
+            Route::get('/', 'index')->name('feature2.index');
+            Route::post('/calculate', 'calculate')->name('feature2.calculate');
+        });
 });
 
 require __DIR__.'/auth.php';
